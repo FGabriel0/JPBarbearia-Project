@@ -2,6 +2,7 @@ package com.example.ApiJpBarbearia.reponse;
 
 
 import com.example.ApiJpBarbearia.enums.ResponseStatusEnum;
+import com.example.ApiJpBarbearia.erros.ApiErros;
 
 import lombok.Data;
 
@@ -11,6 +12,7 @@ public class Response<T> {
     private T data;
     private String status;
     private String message;
+
 
     public Response() {
     	super();
@@ -39,5 +41,7 @@ public class Response<T> {
     public void setStatus(String status) {
         this.status = status;
     }
+    
+   
 
 }

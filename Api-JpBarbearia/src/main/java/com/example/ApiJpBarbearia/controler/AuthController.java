@@ -1,8 +1,10 @@
 package com.example.ApiJpBarbearia.controler;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,14 +13,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ApiJpBarbearia.controler.dto.AuthResponseDTO;
 import com.example.ApiJpBarbearia.controler.form.AuthForm;
 import com.example.ApiJpBarbearia.controler.form.UsuarioForm;
 import com.example.ApiJpBarbearia.entidy.Usuario;
+import com.example.ApiJpBarbearia.enums.ResponseStatusEnum;
 import com.example.ApiJpBarbearia.enums.UserRoles;
+import com.example.ApiJpBarbearia.erros.ApiErros;
 import com.example.ApiJpBarbearia.infra.security.TokenService;
+import com.example.ApiJpBarbearia.reponse.Response;
 import com.example.ApiJpBarbearia.repository.UsuarioRepository;
 
 import jakarta.validation.Valid;
@@ -37,36 +43,55 @@ public class AuthController {
 	private UsuarioRepository repository;
 	
 	@PostMapping("/login")
-	public ResponseEntity logar(@RequestBody @Valid AuthForm form) {
+	@ResponseStatus(HttpStatus.OK)
+	public AuthResponseDTO logar(@RequestBody @Valid AuthForm form) {
 		
 		var userNamePassword = new UsernamePasswordAuthenticationToken(form.getLogin(), form.getPassword());
-		var authetication = authenticationManager.authenticate(userNamePassword); 
-		
-		String accessToken = service.generateToken((Usuario)authetication.getPrincipal());
-		
-        return ResponseEntity.ok(new AuthResponseDTO(accessToken));
+		authenticationManager.authenticate(userNamePassword); 
+				
+        return service.obterToken(form);
 			
 	}
 	
+	 @PostMapping("/refresh-token")
+	 @ResponseStatus(HttpStatus.OK)
+	    public AuthResponseDTO authRefreshToken(@RequestBody AuthResponseDTO requestRefreshDto) {
+	        return service.obterRefreshToken(requestRefreshDto.getRefreshToken());
+	    }
+	
 	
 	@PostMapping("/register")
-	public ResponseEntity<Usuario> register(@RequestBody @Valid UsuarioForm form) {
+	public ResponseEntity<Response<Usuario>> register(@RequestBody @Valid UsuarioForm form) {
+		Response<Usuario>  response = new Response<>();
 
-		
+		try {
 			if(repository.findByLogin(form.getNome()) != null) {
 				return ResponseEntity.badRequest().build();
 			}
 			
 			String encryptedPassword = new BCryptPasswordEncoder().encode(form.getPassword());
-			form.setRole(UserRoles.ADMIN);
+			
 			Usuario newUser = Usuario.builder()
 					.login(form.getNome())
 					.email(form.getEmail())
+					.telefone(form.getTelefone())
 					.password(encryptedPassword)
 					.role(form.getRole())
+					.data_criacao(LocalDateTime.now())
 					.build();
+			
 			repository.save(newUser);
-			return ResponseEntity.ok().build();
+			
+			response.setStatus(ResponseStatusEnum.SUCCESS);
+			response.setData(newUser);
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(ResponseStatusEnum.ERROR);
+			response.setMessage("Ocorreu um erro inesperado. Entre em contato com o administrador do sistema.");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);	
+		}
+			
 	
 	}
 

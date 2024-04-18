@@ -1,5 +1,6 @@
 package com.example.ApiJpBarbearia.entidy;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.ApiJpBarbearia.enums.UserRoles;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,6 +19,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -41,12 +45,19 @@ public class Usuario implements UserDetails {
 	@Column(name = "email")
 	private String email;
 	
-	@Column(name= "senha")
+	@Column(name = "telefone")
+	private String telefone;
+	
+	@Column(name= "password")
 	private String password;
 	
 	@Column(name = "role")
 	@Enumerated(EnumType.STRING)
 	private UserRoles role;
+	
+	@Column(name = "data_criacao")
+	@JsonIgnore
+	private LocalDateTime data_criacao;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

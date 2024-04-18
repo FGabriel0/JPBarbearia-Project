@@ -50,7 +50,7 @@ public class ServicosController {
 	}
 	
 		@GetMapping("/{id}")
-		public ResponseEntity<Response<ServicosDTO>> buscarPorId(@PathVariable Integer id){
+		public ResponseEntity<Response<ServicosDTO>> buscarPorId(@PathVariable @Valid Integer id){
 			Response<ServicosDTO> response = new Response<>();
 			try {
 				ServicosDTO servicos= service.buscarPorIdDTO(id);
@@ -99,7 +99,7 @@ public class ServicosController {
 		
 		@PatchMapping("/{id}")
 		public ResponseEntity<Response<Servicos>> atualizarServico(
-				@PathVariable Integer id,@RequestBody Servicos servicos){
+				@PathVariable Integer id,@RequestBody @Valid Servicos servicos){
 			Response<Servicos> response = new Response<>();
 			try {
 				Servicos servicoAtualizar = service.atualizarServico(id, servicos);
@@ -124,7 +124,7 @@ public class ServicosController {
 		
 		
 		@DeleteMapping("/{id}")
-		public ResponseEntity<Response<Servicos>> deletarServico(@PathVariable Integer id){
+		public ResponseEntity<Response<Servicos>> deletarServico(@PathVariable @Valid Integer id){
 			Response<Servicos> response = new Response<>();
 			try {
 				 service.Deletar(id);
