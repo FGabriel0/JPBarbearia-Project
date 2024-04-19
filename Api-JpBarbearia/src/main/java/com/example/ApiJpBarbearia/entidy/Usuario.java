@@ -92,4 +92,11 @@ public class Usuario implements UserDetails {
 		return true;
 	}
 
+	public Usuario(String login) {
+		super();
+		this.login = login;
+	}
+	
+	
+
 }

@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ServicosServices {
+public class ServicosIMPL {
 	
 	@Autowired
 	private ServiceRepository repository;

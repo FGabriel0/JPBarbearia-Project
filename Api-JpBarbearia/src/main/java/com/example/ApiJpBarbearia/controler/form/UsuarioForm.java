@@ -20,9 +20,11 @@ public class UsuarioForm {
 	@Email(message = "{campo.email.invalido}")
 	private String email;
 	
-	@NotEmpty(message = "campo.telefone.obrigatorio")
+	@NotEmpty(message = "{campo.telefone.obrigatorio}")
 	private String telefone;
 	
+	@NotEmpty(message = "{campo.password.obrigatorio}")
 	private String password;
+	
 	private UserRoles role;
 }

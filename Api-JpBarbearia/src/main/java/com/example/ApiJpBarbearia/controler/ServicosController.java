@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.ApiJpBarbearia.Impl.ServicosServices;
+import com.example.ApiJpBarbearia.Impl.ServicosIMPL;
 import com.example.ApiJpBarbearia.controler.dto.ServicosDTO;
 import com.example.ApiJpBarbearia.controler.form.ServicosForm;
 import com.example.ApiJpBarbearia.entidy.Servicos;
@@ -30,7 +30,7 @@ import jakarta.validation.Valid;
 public class ServicosController {
 	
 	@Autowired
-	private ServicosServices service;
+	private ServicosIMPL service;
 	
 	
 	

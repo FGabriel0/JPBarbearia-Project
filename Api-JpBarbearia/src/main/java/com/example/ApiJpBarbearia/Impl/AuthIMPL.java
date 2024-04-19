@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.example.ApiJpBarbearia.repository.UsuarioRepository;
 
 @Service
-public class AuthService implements UserDetailsService {
+public class AuthIMPL implements UserDetailsService {
 	
 	@Autowired
 	private UsuarioRepository repository;
